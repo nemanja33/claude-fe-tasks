@@ -21,7 +21,6 @@ const initState: FormState = {
     passwordError: undefined,
 }
 
-
 type Action = 
     | { type: "SET_STATUS", payload: FormStatus }
     | { type: "SET_EMAIL", payload: string }
@@ -85,7 +84,6 @@ function reducer(state: FormState, action: Action) {
 function focusElement(ref: RefObject<HTMLInputElement | null>) {
     ref?.current?.focus()
 }
-
 
 const LoginForm = () => {
     const [state, dispatch] = useReducer(reducer, initState)
