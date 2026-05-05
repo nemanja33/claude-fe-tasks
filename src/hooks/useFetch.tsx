@@ -32,7 +32,7 @@ const useFetch = <T,>({ queryFn }: IUseFetch) => {
 
   return {
     apiData,
-    fetchState
+    fetchState,
   }
 };
 

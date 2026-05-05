@@ -4,12 +4,15 @@ import useFetch, { FetchState } from "./useFetch";
 type User = {
   id: number,
   name: string,
-  username: string
+  email: string,
+  company: {
+    name: string
+  }
 }
 
 interface Users {
   apiData: User[] | null,
-  fetchState: FetchState
+  fetchState: FetchState,
 }
 
 const useGetUsers = (): Users => {
@@ -22,3 +25,4 @@ const useGetUsers = (): Users => {
 };
 
 export default useGetUsers;
+export type { User }

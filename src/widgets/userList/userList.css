@@ -1,0 +1,23 @@
+.user-list__list {
+    padding: 0;
+}
+
+.user-list__list-item {
+    padding: 1.5rem 0.25rem;
+    border-bottom: 1px solid grey;
+    list-style-type: none;
+}
+
+.user-list__email {
+    display: block;
+    font-weight: 700;
+}
+
+.user-list__user {
+    display: inline-block;
+    width: 300px;
+}
+
+.user-list__company {
+    margin-left: 1.25rem;
+}
