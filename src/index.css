@@ -38,3 +38,49 @@ code {
 hr {
   margin: 50px 0;
 }
+
+.skeleton {
+  display: block;
+  border-radius:999px;
+  margin:12px 0;
+  background:
+    linear-gradient(135deg,
+      rgba(0,0,0,.06) 0%,
+      rgba(0,0,0,.10) 40%,
+      rgba(0,0,0,.05) 55%,
+      rgba(0,0,0,.06) 100%);
+  background-size: 260% 100%;
+  animation: skeleton 1.35s ease-in-out infinite;
+}
+
+.skeleton--w10{ width:10%; }
+.skeleton--w20{ width:20%; }
+.skeleton--w45{ width:45%; }
+.skeleton--w60{ width:60%; }
+.skeleton--w80{ width:80%; }
+.skeleton--w90{ width:90%; }
+.skeleton--w100{ width:100%; }
+
+.skeleton--h10{ height:10px; }
+.skeleton--h20{ height: 20px; }
+.skeleton--h30{ height: 30px; }
+.skeleton--h100{ height: 100px; }
+
+@keyframes skeleton{
+  0%{ background-position: 0% 50%; opacity:.75; }
+  50%{ opacity:1; }
+  100%{ background-position: 260% 50%; opacity:.75; }
+}
+
+.spacer {
+  display: block;
+}
+
+.spacer--20 {padding: 20px}
+
+.skeleton__flex {
+  display: flex;
+  div {
+    width: 100%;
+  }
+}

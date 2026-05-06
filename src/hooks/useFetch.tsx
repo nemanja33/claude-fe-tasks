@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-type FetchState = 'idle' | 'loading' | 'error'
+type FetchState = 'loading' | 'error' | 'success'
 
 interface IUseFetch {
   queryFn: () => Promise<Response>,
@@ -8,7 +8,7 @@ interface IUseFetch {
 
 const useFetch = <T,>({ queryFn }: IUseFetch) => {
   const [ apiData, setApiData ] = useState<T | null>(null)
-  const [ fetchState, setFetchState ] = useState<FetchState>('idle')
+  const [ fetchState, setFetchState ] = useState<FetchState>('loading')
 
   const getData = useCallback(async () => {
     try {
@@ -20,7 +20,7 @@ const useFetch = <T,>({ queryFn }: IUseFetch) => {
       }
       const data: T = await response.json();
       setApiData(data);
-      setFetchState('idle');
+      setFetchState('success');
     } catch (error) {
       setFetchState('error');
     }

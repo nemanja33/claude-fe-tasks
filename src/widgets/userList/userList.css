@@ -21,3 +21,8 @@
 .user-list__company {
     margin-left: 1.25rem;
 }
+
+.user-list__no-results {
+    margin-top: 1rem;
+    font-size: 2rem;
+}
