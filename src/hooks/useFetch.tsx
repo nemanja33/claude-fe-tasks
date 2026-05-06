@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-type FetchState = 'loading' | 'error' | 'success'
+type FetchState = 'pending' | 'failed' | 'succeeded'
 
 interface IUseFetch {
   queryFn: () => Promise<Response>,
@@ -8,21 +8,21 @@ interface IUseFetch {
 
 const useFetch = <T,>({ queryFn }: IUseFetch) => {
   const [ apiData, setApiData ] = useState<T | null>(null)
-  const [ fetchState, setFetchState ] = useState<FetchState>('loading')
+  const [ fetchState, setFetchState ] = useState<FetchState>('pending')
 
   const getData = useCallback(async () => {
     try {
-      setFetchState('loading');
+      setFetchState('pending');
       const response = await queryFn();
       if (!response.ok) {
-        setFetchState('error');
+        setFetchState('failed');
         return;
       }
       const data: T = await response.json();
       setApiData(data);
-      setFetchState('success');
+      setFetchState('succeeded');
     } catch (error) {
-      setFetchState('error');
+      setFetchState('failed');
     }
   }, [queryFn]);
 

@@ -33,11 +33,11 @@ const UserList = () => {
   const { apiData, fetchState } = useGetUsers();
   const [ searchTerm, setSearchTerm ] = useState<string>('')
 
-  if (fetchState === 'loading') {
+  if (fetchState === 'pending') {
     return <UserListSkeleton />
   }
 
-  if (fetchState === 'error' || !apiData) {
+  if (fetchState === 'failed' || !apiData) {
     return <ErrorBoundary />
   }
 
@@ -55,7 +55,7 @@ const UserList = () => {
       <Input label='Filter users' onChange={filterUsers} hint="Results will update as you type" />
       <span className="sr-only" aria-live="polite" aria-atomic="true">{filteredData.length} items found</span>
       {
-        (!filteredData.length && fetchState === 'success') ? (
+        (!filteredData.length && fetchState === 'succeeded') ? (
           <div className="user-list__no-results">No results found!</div>
         ) :
         (
@@ -72,7 +72,7 @@ const UserList = () => {
   )
 };
 
-// pogledaj useFetch da li se dobro hendluje, narocito greske
+// pogledaj useFetch da li se dobro hendluje, narocito greske. nzm da li da dodajem idle status
 
 export { UserList };
 
