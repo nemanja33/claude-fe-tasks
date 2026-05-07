@@ -16,13 +16,16 @@ const useFetch = <T,>({ queryFn }: IUseFetch) => {
       const response = await queryFn();
       if (!response.ok) {
         setFetchState('failed');
-        return;
+        return console.error(`HTTP error! status: ${response.status}`)
       }
       const data: T = await response.json();
       setApiData(data);
       setFetchState('succeeded');
     } catch (error) {
-      setFetchState('failed');
+      if (error instanceof Error) {
+        setFetchState('failed');
+        return console.log('Fetch failed:', error.message);
+      }
     }
   }, [queryFn]);
 

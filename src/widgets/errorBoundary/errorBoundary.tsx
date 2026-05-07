@@ -2,7 +2,7 @@ const ErrorBoundary = () => {
 
   return (
     <>
-      OOps an error occured! Please try again later
+      Oops an error occurred! Please try again later!
     </>
   )
 };
