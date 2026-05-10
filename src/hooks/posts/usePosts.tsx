@@ -1,0 +1,28 @@
+import { useQuery } from "@tanstack/react-query";
+import useFetch from '../useFetch';
+import { SIXTY_SECONDS } from '../../client/queryClient';
+
+type Post = {
+  userId: number,
+  id: number,
+  title: string,
+  body: string
+}
+
+const useGetPosts = (id: number) => {
+  const queryFn = () => fetch(`${process.env.REACT_APP_POSTS_API}?userId=${id}`, {
+    headers: {'Access-Control-Allow-Origin': '*'}
+  })
+  const postsQuery = useQuery({
+    queryKey: ['post', id],
+    queryFn: useFetch<Post[]>({ queryFn }),
+    staleTime: SIXTY_SECONDS,
+    enabled: false
+  });
+
+  return postsQuery;
+}
+
+export type { Post }
+
+export default useGetPosts

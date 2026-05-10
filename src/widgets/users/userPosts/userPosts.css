@@ -1,0 +1,12 @@
+.user-posts {
+    list-style-type: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    padding: 1rem;
+}
+
+.user-posts__item {
+    padding-top: 1rem;
+}

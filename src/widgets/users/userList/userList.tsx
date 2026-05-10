@@ -1,9 +1,11 @@
 import { ChangeEvent, memo, useCallback, useMemo, useState } from 'react';
-import { Input } from '../../components/input/input';
-import useGetUsers, { User } from '../../hooks/useGetUsers';
-import { ErrorBoundary } from '../errorState/errorState';
+import { Input } from '../../../components/input/input';
+import { ErrorState } from '../../errorState/errorState';
 import './userList.css';
 import UserListSkeleton from './userListSkeleton';
+import useGetPosts from '../../../hooks/posts/usePosts';
+import useGetUsers, { User } from '../../../hooks/users/useUsers';
+import { UserPosts } from '../userPosts/userPosts';
 
 function includesString(base: string, incl: string) {
   return base.toLowerCase().includes(incl.toLowerCase())
@@ -12,16 +14,20 @@ function includesString(base: string, incl: string) {
 const UserItem = ({
   name,
   email,
-  company
+  company,
+  id
 }: User) => {
+
+  const { data, isLoading, error, refetch } = useGetPosts(id);
 
   return (
     <li className='user-list__list-item'>
       <span className='user-list__user'>
-        {name}
+        <button className='user-list__name' onClick={() => refetch()} type='button'>{name}</button>
         <span className='user-list__email'>{email}</span>
       </span>
       <span className='user-list__company'>{company.name}</span>
+      <UserPosts data={data} isLoading={isLoading} error={error}/>
     </li>
   )
 }
@@ -30,24 +36,24 @@ const UserItem = ({
 const MemoUserItem = memo(UserItem);
 
 const UserList = () => {
-  const { apiData, fetchState } = useGetUsers();
+  const { data, error, isLoading } = useGetUsers();
   const [ searchTerm, setSearchTerm ] = useState<string>('')
   
   const filteredData = useMemo(() =>
-    (apiData ?? []).filter((x: User) => includesString(x.name, searchTerm)),
-  [apiData, searchTerm])
+    (data ?? []).filter((x: User) => includesString(x.name, searchTerm)),
+  [data, searchTerm])
 
   const filterUsers = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setSearchTerm(val);
   }, [])
 
-  if (fetchState === 'pending') {
+  if (isLoading) {
     return <UserListSkeleton />
   }
 
-  if (fetchState === 'failed' || !apiData) {
-    return <ErrorBoundary />
+  if (error || !data) {
+    return <ErrorState />
   }
 
   return (
@@ -59,7 +65,7 @@ const UserList = () => {
           <div className="user-list__no-results">No results found!</div>
         ) :
         (
-        <ul className='user-list__list'>
+        <ul className='user-list__list'> 
           {
             filteredData.map((data) => (
               <MemoUserItem key={data.id} {...data} />
