@@ -1,0 +1,88 @@
+# Learning Notes
+
+## Task 1 - Button Component
+
+- ButtonHTMLAttributes vs HTMLAttributes — always extend the most specific type
+- forwardRef — required for any reusable component that consumers may need to control or measure
+- Prop spread ordering — controlled values that must not be overridden go after {...rest}
+- aria-busy vs aria-hidden — aria-busy signals "wait", aria-hidden controls visibility; they serve different purposes and aren't substitutes
+- sr-only pattern — visually hide content while keeping it in the accessibility tree
+- BEM naming — prevents class collisions as the codebase grows
+- display: inline-flex — correct default for button internals
+- type="button" default — prevents accidental form submission
+
+---
+
+## Task 2 — Input Component
+
+- **useId()** — React 18's solution for stable, unique IDs per component instance; essential for label association in reusable components
+- **htmlFor / id pairing** — the correct programmatic way to associate labels with inputs (vs wrapping, which is less robust)
+- **aria-describedby** — how to point an element at supplementary descriptive text, and that the referenced element must be in the accessibility tree (display: none breaks it, visibility: hidden doesn't)
+- **aria-invalid** — signals field error state persistently, independent of whether the error message is visible
+- **role="alert"** — triggers immediate screen reader announcement when content appears in the DOM
+- **Template literal pitfalls** — ${false} and ${null} produce literal strings, always use ternaries with '' as the falsy branch
+- **Consumer ID override pattern** — id ?? generatedId lets consumers control IDs when needed (e.g. for testing or external label association)
+
+---
+
+## Task 3 — Login Form
+
+- **useReducer vs multiple useState** — use it when state fields are interdependent or transitions need to be atomic; useState sprawl creates coordination bugs
+- **Discriminated unions for actions** — TypeScript narrows the payload type per action, preventing mismatched dispatches
+- **Lookup table reducer** — cleaner alternative to switch, maps action types directly to handler functions
+- **Validation return values over state reads** — functions should return success/failure directly rather than dispatching into state and trying to read it back (stale closure trap)
+- **Stale closures in event handlers** — e.target.value is always current; state.value captured at render time may lag
+- **aria-labelledby on forms** — gives the form an accessible name via an associated heading
+- **aria-live="polite" + role="status"** — announces dynamic content changes to screen readers without interrupting
+- **onBlur composition pattern** — reusable components should merge consumer handlers with internal ones, not replace them
+
+---
+
+## Task 4 — Filterable User List
+
+### Questions & Answers
+
+**What is the fetch-on-render problem and does your implementation have it?**
+My answer: problem with showing something while fetching. Added a loading state to show until data, or error appear.
+Correction: The actual problem is waterfall fetching — Component A renders → starts fetch → data arrives → renders Component B → Component B starts its own fetch. Each child's fetch can't start until its parent finishes rendering. TanStack Query and route-level loaders solve this by starting all fetches before the render tree is built.
+
+**What is React reconciliation and why does a stable key matter more than just "avoiding the warning"?**
+My answer: this should be the process of re-rendering. the key matters, as react can map each item with the key prop to its corresponding place correctly.
+Correction: Right but incomplete. With index keys, filtering [A, B, C] to [A, C] makes React think item at index 1 is now C (was B) — it mutates the wrong DOM node, causes focus loss, breaks CSS transitions, and unmounts/remounts when it didn't need to. Stable IDs let React say "C is still C, just moved" and reuse the DOM node correctly.
+
+**React.memo prevents re-renders when props don't change — but if you define a callback inside the parent component without useCallback, what happens to React.memo's guarantee?**
+My answer: all memoized variables, functions need to be all the way memoized, parent, children all. If not then they will not get memoised and practically nothing is gained.
+Correction: Correct idea, imprecise framing. The specific issue is: a non-memoized callback is a new function reference every render. memo does a shallow props comparison — new reference = changed prop = re-render. useCallback makes the reference stable so memo's comparison holds.
+
+**When does useMemo for a filter actually save work, and when is it premature optimisation?**
+My answer: it is useful if I have unrelated state to this component and I don't want that to rerender.
+Correction: Correct. Worth adding: for 10 users, even without memoization the filter is microseconds. useMemo has its own overhead (dep array allocation and comparison). At small scale it's premature — it earns its cost only with large lists or expensive transforms.
+
+### Concepts Covered
+
+- **Custom hook composition** — useFetch<T> as a generic primitive, useGetUsers as a domain-specific wrapper; each layer has a single responsibility
+- **Generic hooks with TypeScript** — <T,> syntax for generic function components, letting the caller decide the shape of the response
+- **Async inside useEffect** — define the async function inside the effect, call it immediately; avoids the useCallback indirection and the infinite loop footgun
+- **React.memo** — prevents re-renders when props are shallowly equal; only useful when the component actually re-renders unnecessarily
+- **useCallback** — stabilises function references so memo prop comparisons hold; without it, memo sees a "new" function every render and re-renders anyway
+- **useMemo placement** — hooks cannot be called after early returns; memoised values must be computed unconditionally at the top of the component
+- **Stable keys and reconciliation** — keys let React identify DOM nodes across renders; index keys cause React to reuse the wrong nodes when lists reorder or filter
+- **Fetch-on-render waterfalls** — the real problem is sequential fetches blocked by render phases, not loading states; this is what route-level loaders and TanStack Query solve
+- **aria-live on dynamic filter results** — screen readers don't announce list changes automatically; an aria-live region bridges that gap
+
+
+## Task 5 -
+
+- How does useQuery replace the useEffect + useState pattern you had in useFetch?
+- useQuery just needs the promise, and it handles the rest
+- What is a query key and why is ['posts', userId] better than ['posts']?
+- it's used for caching the data. with an id it knows which data to not fetch again exactly
+- How do you tell useQuery to only run when a condition is met?
+- with refatch
+- After building it — where exactly did the fetch-on-render waterfall from Task 4 still exist, and how does TanStack Query change that?
+- still uncertain about this topic. but you mentioned in one of the answers that Tanstack Query prefetches everything and removes the waterfall
+
+- Answer corrections
+- enabled / conditional query — refetch is wrong here. enabled: !!condition is the answer. When the condition becomes true (e.g. selectedUserId is set), TanStack Query runs the query automatically. refetch bypasses the cache and is for manual re-fetching of data that's already been fetched.
+
+- Fetch-on-render waterfall — TanStack Query does not automatically prefetch everything. prefetchQuery exists but you must call it explicitly. What TanStack Query does solve: deduplication (multiple components requesting the same key share one request) and cache hits on re-mount (no re-fetch if data is fresh). The waterfall in your app still exists — posts only fetch after a user is clicked, which is after users are rendered. That's acceptable and intentional here. The waterfall TanStack Query prevents is the accidental one: the same data being fetched multiple times by different components simultaneously.
