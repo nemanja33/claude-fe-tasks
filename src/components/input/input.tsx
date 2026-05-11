@@ -65,12 +65,3 @@ const Input = forwardRef<HTMLInputElement, IInput>(
 
 
 export { Input }
-
-// What Task 2 covered
-// useId() — React 18's solution for stable, unique IDs per component instance; essential for label association in reusable components
-// htmlFor / id pairing — the correct programmatic way to associate labels with inputs (vs wrapping, which is less robust)
-// aria-describedby — how to point an element at supplementary descriptive text, and that the referenced element must be in the accessibility tree (display: none breaks it, visibility: hidden doesn't)
-// aria-invalid — signals field error state persistently, independent of whether the error message is visible
-// role="alert" — triggers immediate screen reader announcement when content appears in the DOM
-// Template literal pitfalls — ${false} and ${null} produce literal strings, always use ternaries with '' as the falsy branch
-// Consumer ID override pattern — id ?? generatedId lets consumers control IDs when needed (e.g. for testing or external label association)

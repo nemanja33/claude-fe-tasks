@@ -71,18 +71,34 @@ Correction: Correct. Worth adding: for 10 users, even without memoization the fi
 - **aria-live on dynamic filter results** — screen readers don't announce list changes automatically; an aria-live region bridges that gap
 
 
-## Task 5 -
+## Task 5 — TanStack Query + User Detail
 
-- How does useQuery replace the useEffect + useState pattern you had in useFetch?
-- useQuery just needs the promise, and it handles the rest
-- What is a query key and why is ['posts', userId] better than ['posts']?
-- it's used for caching the data. with an id it knows which data to not fetch again exactly
-- How do you tell useQuery to only run when a condition is met?
-- with refatch
-- After building it — where exactly did the fetch-on-render waterfall from Task 4 still exist, and how does TanStack Query change that?
-- still uncertain about this topic. but you mentioned in one of the answers that Tanstack Query prefetches everything and removes the waterfall
+### Questions & Answers
 
-- Answer corrections
-- enabled / conditional query — refetch is wrong here. enabled: !!condition is the answer. When the condition becomes true (e.g. selectedUserId is set), TanStack Query runs the query automatically. refetch bypasses the cache and is for manual re-fetching of data that's already been fetched.
+**How does useQuery replace the useEffect + useState pattern?**
+My answer: useQuery just needs the promise, and it handles the rest.
+Correction: Correct at a surface level. More precisely: useFetch had useState for apiData and fetchState, plus a useEffect to trigger the fetch. useQuery eliminates all of that — it manages its own internal state (loading, error, data) and gives you those values directly. It also adds caching, background refetching, and deduplication that the custom hook didn't have.
 
-- Fetch-on-render waterfall — TanStack Query does not automatically prefetch everything. prefetchQuery exists but you must call it explicitly. What TanStack Query does solve: deduplication (multiple components requesting the same key share one request) and cache hits on re-mount (no re-fetch if data is fresh). The waterfall in your app still exists — posts only fetch after a user is clicked, which is after users are rendered. That's acceptable and intentional here. The waterfall TanStack Query prevents is the accidental one: the same data being fetched multiple times by different components simultaneously.
+**What is a query key and why is ['posts', userId] better than ['posts']?**
+My answer: it's used for caching the data. with an id it knows which data to not fetch again exactly.
+Correction: Correct. If all users shared ['posts'] as the key, fetching user 2's posts would overwrite user 1's cached posts. With ['posts', userId], each user's posts are cached independently.
+
+**How do you tell useQuery to only run when a condition is met?**
+My answer: with refetch.
+Correction: Wrong. The answer is enabled: !!condition. When the condition becomes true, TanStack Query runs the query automatically. refetch bypasses the cache and is for manual re-fetching of already-fetched data.
+
+**Where did the fetch-on-render waterfall still exist, and how does TanStack Query change that?**
+My answer: still uncertain. TanStack Query prefetches everything and removes the waterfall.
+Correction: TanStack Query does not automatically prefetch everything — prefetchQuery exists but must be called explicitly. The waterfall still exists here: posts only fetch after a user is clicked, after users are rendered. That's intentional. What TanStack Query prevents is the accidental waterfall: the same data being fetched multiple times by different components simultaneously (deduplication) and unnecessary re-fetches on re-mount (cache hits).
+
+### Concepts Covered
+
+- **useQuery vs useEffect + useState** — TanStack Query replaces manual fetch orchestration, giving data, isLoading, and error out of the box, plus caching, deduplication, and background refetching for free
+- **Query keys** — the cache identity for a query; ['post', id] gives each user's posts their own cache slot, ['post'] would overwrite with every new fetch
+- **enabled for dependent queries** — declarative conditional fetching; the query runs automatically when the condition becomes true, no manual refetch needed
+- **as const on query keys** — gives TypeScript precise tuple types instead of (string | number)[]
+- **refetch vs enabled** — refetch bypasses the cache and is for manual refresh; enabled is for conditional execution
+- **Passing props selectively to memoised components** — passing a changing object to all items defeats React.memo; only pass what each item actually needs
+- **CORS is server-side** — Access-Control-Allow-Origin is a response header the server sets; adding it to client requests does nothing
+- **Hooks must be unconditional** — early returns before useQuery are a hooks violation; use enabled instead
+- **Lifting state minimally** — state only needs to live at the lowest common ancestor of all components that need it; one level up is usually enough

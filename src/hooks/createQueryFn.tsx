@@ -1,9 +1,9 @@
 
-interface IUseFetch {
+interface ICreateQueryFn {
   queryFn: () => Promise<Response | null>,
 }
 
-const useFetch = <T,>({ queryFn }: IUseFetch) => {
+const createQueryFn = <T,>({ queryFn }: ICreateQueryFn) => {
   async function getData() {
     const response = await queryFn();
     if (!response?.ok) {
@@ -17,4 +17,4 @@ const useFetch = <T,>({ queryFn }: IUseFetch) => {
   return getData
 };
 
-export default useFetch;
+export default createQueryFn;

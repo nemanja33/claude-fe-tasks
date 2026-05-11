@@ -4,16 +4,17 @@ import './userPosts.css'
 import { ErrorState } from "../../errorState/errorState";
 
 type UserPostsType = {
-  data: Post[] | void,
-  isLoading: boolean,
-  error: Error | null;
+  post: {
+    data: Post[] | undefined,
+    isLoading: boolean,
+    error: Error | null;
+  }
 }
 
 const UserPosts = ({
-  data,
-  isLoading,
-  error
+  post
 }: UserPostsType) => {
+  const { isLoading, error, data } = post
   if (isLoading) {
     return <UserPostsSkeleton />
   }

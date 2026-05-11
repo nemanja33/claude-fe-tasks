@@ -151,12 +151,3 @@ const LoginForm = () => {
 };
 
 export { LoginForm }
-
-// useReducer vs multiple useState — use it when state fields are interdependent or transitions need to be atomic; useState sprawl creates coordination bugs
-// Discriminated unions for actions — TypeScript narrows the payload type per action, preventing mismatched dispatches
-// Lookup table reducer — cleaner alternative to switch, maps action types directly to handler functions
-// Validation return values over state reads — functions should return success/failure directly rather than dispatching into state and trying to read it back (stale closure trap)
-// Stale closures in event handlers — e.target.value is always current; state.value captured at render time may lag
-// aria-labelledby on forms — gives the form an accessible name via an associated heading
-// aria-live="polite" + role="status" — announces dynamic content changes to screen readers without interrupting
-// onBlur composition pattern — reusable components should merge consumer handlers with internal ones, not replace them

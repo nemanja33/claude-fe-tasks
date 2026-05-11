@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import useFetch from '../useFetch';
+import createQueryFn from '../createQueryFn';
 import { SIXTY_SECONDS } from '../../client/queryClient';
 
 type User = {
@@ -15,7 +15,7 @@ const useGetUsers = () => {
   const queryFn = () => fetch(process.env.REACT_APP_USERS_API as string);
   const usersQuery = useQuery({
     queryKey: ['users'],
-    queryFn: useFetch<User[]>({queryFn}),
+    queryFn: createQueryFn<User[]>({queryFn}),
     staleTime: SIXTY_SECONDS
   })
 

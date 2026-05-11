@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import useFetch from '../useFetch';
+import createQueryFn from '../createQueryFn';
 import { SIXTY_SECONDS } from '../../client/queryClient';
 
 type Post = {
@@ -9,15 +9,13 @@ type Post = {
   body: string
 }
 
-const useGetPosts = (id: number) => {
-  const queryFn = () => fetch(`${process.env.REACT_APP_POSTS_API}?userId=${id}`, {
-    headers: {'Access-Control-Allow-Origin': '*'}
-  })
+const useGetPosts = (id?: number) => {
+  const queryFn = () => fetch(`${process.env.REACT_APP_POSTS_API}?userId=${id}`)
   const postsQuery = useQuery({
-    queryKey: ['post', id],
-    queryFn: useFetch<Post[]>({ queryFn }),
+    queryKey: ['post', id] as const,
+    queryFn: createQueryFn<Post[]>({ queryFn }),
     staleTime: SIXTY_SECONDS,
-    enabled: false
+    enabled: !!id
   });
 
   return postsQuery;

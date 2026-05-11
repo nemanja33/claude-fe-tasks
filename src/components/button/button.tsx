@@ -44,13 +44,3 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
 export { Button };
 
-// Here's what this task covered:
-
-// ButtonHTMLAttributes vs HTMLAttributes — always extend the most specific type
-// forwardRef — required for any reusable component that consumers may need to control or measure
-// Prop spread ordering — controlled values that must not be overridden go after {...rest}
-// aria-busy vs aria-hidden — aria-busy signals "wait", aria-hidden controls visibility; they serve different purposes and aren't substitutes
-// sr-only pattern — visually hide content while keeping it in the accessibility tree
-// BEM naming — prevents class collisions as the codebase grows
-// display: inline-flex — correct default for button internals
-// type="button" default — prevents accidental form submission
