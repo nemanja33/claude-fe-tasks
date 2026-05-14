@@ -1,10 +1,36 @@
-import { FC } from "react";
-import UserListSkeleton from "../../widgets/users/userList/userListSkeleton";
+const items = 3;
 
-const HomeSkeleton: FC = () => {
+const HomeSkeleton = () => {
   return (
     <div className='wrap'>
-      <UserListSkeleton />
+      <div aria-label="Loading skeleton">
+        <div className="skeleton__flex">
+          <div>
+            <span className="skeleton skeleton--w60 skeleton--h10"></span>
+          </div>
+          <div>
+            <span className="skeleton skeleton--w60 skeleton--h10"></span>
+          </div>
+        </div>
+        <span className="spacer spacer--20"></span>
+        <span className="skeleton skeleton--w10 skeleton--h10"></span>
+        <span className="skeleton skeleton--w20 skeleton--h10"></span>
+        <span className="spacer spacer--20"></span>
+        {
+          [...(Array(items).keys())].map((_, i) => (
+            <div className="skeleton__flex" key={i}>
+              <div>
+                <span className="skeleton skeleton--w45 skeleton--h10"></span>
+                <span className="skeleton skeleton--w45 skeleton--h10"></span>
+              </div>
+              <div>
+                <span className="skeleton skeleton--w60 skeleton--h10"></span>
+              </div>
+            </div>
+          ))
+        }
+
+      </div>
     </div>
   )
 };

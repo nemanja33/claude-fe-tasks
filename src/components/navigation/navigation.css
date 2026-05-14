@@ -1,0 +1,22 @@
+.navigation {
+  background-color: antiquewhite;
+  margin-bottom: 5rem;
+  padding: 2rem 0;
+}
+
+.navigation__items {
+  list-style-type: none;
+  display: flex;
+  gap: 2rem;
+}
+
+.navigation__link {
+  text-decoration: none;
+  font-size: 1.25rem;
+  color: #333;
+  font-weight: bold;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

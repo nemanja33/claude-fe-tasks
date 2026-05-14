@@ -3,11 +3,7 @@ import { UserList } from "../../widgets/users/userList/userList";
 
 const HomePage: FC = () => {
 
-  return (
-    <div className='wrap'>
-      <UserList />
-    </div>
-  )
+  return <UserList />
 };
 
 export default HomePage;
