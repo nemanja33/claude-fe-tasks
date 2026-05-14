@@ -1,6 +1,6 @@
 import { Link } from "react-router";
-import { routes } from "../../router/router";
 import './navigation.css';
+import { routes } from "../../router/routes";
 
 const Navigation = () => {
 
