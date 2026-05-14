@@ -131,3 +131,26 @@ Refactor data fetching to TanStack Query and add a user detail panel.
 
 **Concepts covered:**
 `useQuery`, `QueryClient`, `QueryClientProvider`, `staleTime`, query keys and cache identity, dependent queries with `enabled`, TanStack Query cache hits, `refetch` vs `enabled` distinction, CORS headers (server-side only), declarative vs imperative data fetching
+
+---
+
+## Task 6 — Code Splitting & Lazy Loading
+
+Add routing and implement route-level code splitting.
+
+**Setup:**
+- Install React Router
+- Create two routes: `/` (user list) and `/login` (login form)
+
+**Requirements:**
+- Both page-level components lazily loaded with `React.lazy` and dynamic `import()`
+- Wrap lazy routes in `Suspense` with a meaningful skeleton fallback
+- Simple nav with links between routes
+- Nav and shared UI in the main bundle — not lazy
+
+**TypeScript:**
+- Route definitions typed
+- No `any`
+
+**Concepts covered:**
+Static import vs dynamic import, `React.lazy`, `Suspense`, skeleton fallbacks, `react-error-boundary` for failed chunk loads, route-level code splitting, main bundle vs chunks, navigation derived from routes config

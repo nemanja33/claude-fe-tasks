@@ -1,7 +1,6 @@
-import { FC } from "react";
 import { UserList } from "../../widgets/users/userList/userList";
 
-const HomePage: FC = () => {
+const HomePage = () => {
 
   return <UserList />
 };

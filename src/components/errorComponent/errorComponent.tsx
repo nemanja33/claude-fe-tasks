@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import './errorMessage.css';
+import './error.css';
 import { ErrorBoundary } from 'react-error-boundary';
 
 interface ErrorType {

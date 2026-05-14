@@ -102,3 +102,36 @@ Correction: TanStack Query does not automatically prefetch everything — prefet
 - **CORS is server-side** — Access-Control-Allow-Origin is a response header the server sets; adding it to client requests does nothing
 - **Hooks must be unconditional** — early returns before useQuery are a hooks violation; use enabled instead
 - **Lifting state minimally** — state only needs to live at the lowest common ancestor of all components that need it; one level up is usually enough
+
+---
+
+## Task 6 — Code Splitting & Lazy Loading
+
+### Questions & Answers
+
+**What is the difference between import Input from './input' and const Input = React.lazy(() => import('./input'))?**
+My answer: lazy returns a promise which shows the content only when it's done processing it. So the final bundle is smaller with lazy and we have another response loading afterwards.
+Correction: Partially right. The total JavaScript downloaded is the same either way — lazy doesn't remove code. What changes is when it downloads. Static import = included in the main bundle, arrives on first load. Lazy = separate chunk file, downloads only when that route is first visited. The main bundle is smaller so initial parse and execute is faster, and unused routes are never downloaded if the user never visits them.
+
+**What makes a good fallback vs a bad one?**
+My answer: a good fallback would be a skeleton which shows what the UI will look like.
+Correct. Bad fallbacks: a generic spinner (causes layout shift), or null (blank screen). Skeletons preserve layout and reduce perceived load time.
+
+**What happens if a lazy import fails? How do you handle that?**
+My answer: ErrorBoundary — used react-error-boundary package.
+Correct. When a lazy chunk fails to load, React throws an error that an Error Boundary catches. react-error-boundary is the standard library for this.
+
+**Network tab: what do you see on / vs /login?**
+My answer: separate chunk files are loaded per route, only when navigating to that route.
+Correct. Each chunk loads on first navigation to its route. If you never visit /login, that JavaScript never downloads.
+
+### Concepts Covered
+
+- **Static import vs dynamic import** — static puts code in the main bundle (loads immediately); dynamic splits it into a separate chunk (loads on demand); total code is the same, but when it downloads changes
+- **React.lazy** — wraps a dynamic import so React can render the component once the chunk resolves
+- **Suspense** — catches the loading state from lazy components and renders the fallback until the chunk is ready
+- **Skeleton fallbacks** — meaningful fallbacks preserve layout and reduce perceived load time vs a spinner or blank screen
+- **react-error-boundary** — lazy imports can fail (chunk 404, network error); Error Boundaries catch the thrown error and show a fallback instead of crashing the tree
+- **Route-level code splitting** — the natural split boundary; each route is its own chunk, loaded on demand
+- **Main bundle vs chunks** — shared UI (nav, providers) stays in the main bundle; page-level components go into chunks
+- **Navigation from routes config** — single source of truth; adding a route automatically adds a nav item
