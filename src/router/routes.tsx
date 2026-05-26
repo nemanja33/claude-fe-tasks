@@ -12,6 +12,7 @@ type RouteType = {
 
 const Home = lazy(() => import("../pages/home/home.page"))
 const Login = lazy(() => import("../pages/login/login.page"))
+const Favourites = lazy(() => import("../pages/favourites/favouritespage"))
 
 const HomeElement = () => {
   return (
@@ -33,6 +34,16 @@ const LoginPage = () => {
   )
 }
 
+const FavouritesPage = () => {
+  return (
+    <ErrorComponent>
+      <Suspense fallback={<LoginSkeleton />}>
+        <Favourites />
+      </Suspense>
+    </ErrorComponent>
+  )
+}
+
 const routes: RouteType[] = [
   {
     label: "Home",
@@ -43,6 +54,11 @@ const routes: RouteType[] = [
     label: "Login",
     path: "/login",
     element: <LoginPage />
+  },
+  {
+    label: "Favourites",
+    path: "/favourites",
+    element: <FavouritesPage />
   }
 ];
 

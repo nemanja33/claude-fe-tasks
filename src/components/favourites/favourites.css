@@ -1,0 +1,11 @@
+.favourites {
+  display: flex;
+  align-items: center;
+}
+
+.favourites__button {
+  margin-left: 2rem;
+  border: 1px solid gray;
+  padding: 1rem;
+  cursor: pointer;
+}
