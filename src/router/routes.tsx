@@ -2,19 +2,21 @@ import { ReactNode, Suspense, lazy } from "react";
 import HomeSkeleton from "../pages/home/home.skeleton";
 import LoginSkeleton from "../pages/login/login.skeleton";
 import ErrorComponent from "../components/errorComponent/errorComponent";
-
+import { PAGES } from "./constants";
 
 type RouteType = {
-  label: string;
-  path: string;
-  element: ReactNode,
+  [key: string]: {
+    path: string;
+    element: ReactNode,
+    count?: boolean
+  }
 }
 
 const Home = lazy(() => import("../pages/home/home.page"))
 const Login = lazy(() => import("../pages/login/login.page"))
 const Favourites = lazy(() => import("../pages/favourites/favouritespage"))
 
-const HomeElement = () => {
+const HomePage = () => {
   return (
     <ErrorComponent>
       <Suspense fallback={<HomeSkeleton />}>
@@ -44,22 +46,20 @@ const FavouritesPage = () => {
   )
 }
 
-const routes: RouteType[] = [
-  {
-    label: "Home",
+const ROUTES: RouteType = {
+  [PAGES.HOME]: {
     path: "/",
-    element: <HomeElement />
+    element: <HomePage />
   },
-  {
-    label: "Login",
+  [PAGES.LOGIN]: {
     path: "/login",
     element: <LoginPage />
   },
-  {
-    label: "Favourites",
+  [PAGES.FAVOURITES]: {
     path: "/favourites",
-    element: <FavouritesPage />
+    element: <FavouritesPage />,
+    count: true
   }
-];
+}
 
-export { routes }
+export { ROUTES }

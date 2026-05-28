@@ -7,6 +7,7 @@ import useGetPosts, { Post } from '../../../hooks/posts/usePosts';
 import useGetUsers, { User } from '../../../hooks/users/useUsers';
 import { UserPosts } from '../userPosts/userPosts';
 import { UseQueryResult } from '@tanstack/react-query';
+import { UserFavourite } from './userFavourite';
 
 function includesString(base: string, incl: string) {
   return base.toLowerCase().includes(incl.toLowerCase())
@@ -17,6 +18,8 @@ type UserItemProps = User & {
   onSelect: (id: number) => void;
   selectedId?: number,
 }
+
+const MemoFavourite = memo(UserFavourite);
 
 const UserItem = ({
   name,
@@ -29,16 +32,19 @@ const UserItem = ({
 }: UserItemProps) => {
   return (
     <li className='user-list__list-item'>
-      <span className='user-list__user'>
+      <div className='user-list__user'>
         <button
           className='user-list__name'
           onClick={() => onSelect(id)}
           type='button'>
             {name}
         </button>
+        <MemoFavourite userName={name} />
+      </div>
+      <div>
         <span className='user-list__email'>{email}</span>
-      </span>
-      <span className='user-list__company'>{company.name}</span>
+        <span className='user-list__company'>{company.name}</span>
+      </div>
       {
         selectedId === id && post && (
           <UserPosts post={post} />

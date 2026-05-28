@@ -9,13 +9,15 @@
 }
 
 .user-list__email {
-    display: block;
     font-weight: 700;
 }
 
 .user-list__user {
-    display: inline-block;
+    display: inline-flex;
     width: 300px;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 2rem;
 }
 
 .user-list__company {
@@ -33,7 +35,6 @@
     padding: 1rem;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     font-size: 1rem;
-    margin-bottom: 2rem;
     cursor: pointer;
     will-change: transform;
     transition: transform 0.3s ease-in;
@@ -42,4 +43,20 @@
     &:hover {
         transform: scale(1.05);
     }
+}
+
+.user-favourite {
+    border: 0;
+    background-color: transparent;
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+
+    &:hover svg {
+        transform: scale(1.2);
+    }
+}
+
+.user-favourite--active #Vivid-Icons {
+    fill: gold;
 }

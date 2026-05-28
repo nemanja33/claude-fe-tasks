@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router";
 import { Navigation } from "../components/navigation/navigation";
-import { routes } from "./routes";
+import { ROUTES } from "./routes";
 
 const AppRouter = () => {
   return (
@@ -9,9 +9,12 @@ const AppRouter = () => {
       <div className="wrap">
         <Routes>
           {
-            routes.map(({ path, element, label }) => (
-              <Route key={label.toLowerCase().replaceAll(' ', '-')} path={path} element={element} />
-            ))
+            Object.entries(ROUTES).map((data) => {
+              const label = data[0];
+              const path = data[1].path;
+              const element = data[1].element;
+              return <Route key={label.toLowerCase().replaceAll(' ', '-')} path={path} element={element} />
+            })
           }
         </Routes>
       </div>
