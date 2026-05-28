@@ -1,0 +1,9 @@
+.favourites {
+  list-style-type: none;
+  padding: 0;
+}
+
+.favourites__item {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #333;
+}

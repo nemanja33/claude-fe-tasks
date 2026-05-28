@@ -1,4 +1,5 @@
 import { useAppSelector } from "../../redux/hooks";
+import "./favourites.css";
 
 const FavouritesPage = () => {
   const favouriteUsers = useAppSelector(state => state.favourites.favs);
@@ -8,10 +9,10 @@ const FavouritesPage = () => {
   }
 
   return (
-    <ul>
+    <ul className="favourites">
       {
         favouriteUsers.map((user) => (
-          <li key={user}>{user}</li>
+          <li className="favourites__item" key={user}>{user}</li>
         ))
       }
     </ul>

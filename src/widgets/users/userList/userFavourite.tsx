@@ -12,13 +12,7 @@ const UserFavourite = ({
   const isFavourite = useAppSelector(state => getSingle(state, userName))
 
   const btnClass = `user-favourite ${isFavourite ? 'user-favourite--active' : null}`
-
-  const handleClick = (() => {
-    isFavourite ?
-      dispatch(removeFromFavourites(userName))
-      :
-      dispatch(addToFavourites(userName))
-  })
+  const handleClick = () => isFavourite ? dispatch(removeFromFavourites(userName)) : dispatch(addToFavourites(userName))
 
   return (
     <button

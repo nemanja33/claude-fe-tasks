@@ -113,4 +113,4 @@ const UserList = () => {
 };
 
 
-export { UserList };
+export { UserList, UserItem };
