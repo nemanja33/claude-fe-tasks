@@ -2,7 +2,7 @@ import { ReactNode, Suspense, lazy } from "react";
 import HomeSkeleton from "../pages/home/home.skeleton";
 import LoginSkeleton from "../pages/login/login.skeleton";
 import ErrorComponent from "../components/errorComponent/errorComponent";
-import { PAGES } from "./constants";
+import { PAGES } from "./pages";
 
 type RouteType = {
   [key: string]: {
