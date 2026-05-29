@@ -1,10 +1,8 @@
 import { ChangeEvent, memo, useCallback, useMemo, useState } from 'react';
 import { Input } from '../../../components/input/input';
-import { ErrorState } from '../../errorState/errorState';
 import './userList.css';
-import UserListSkeleton from './userListSkeleton';
 import useGetPosts, { Post } from '../../../hooks/posts/usePosts';
-import useGetUsers, { User } from '../../../hooks/users/useUsers';
+import { User } from '../../../hooks/users/useUsers';
 import { UserPosts } from '../userPosts/userPosts';
 import { UseQueryResult } from '@tanstack/react-query';
 import { UserFavourite } from './userFavourite';
@@ -17,6 +15,10 @@ type UserItemProps = User & {
   post: UseQueryResult<Post[], Error> | undefined,
   onSelect: (id: number) => void;
   selectedId?: number,
+}
+
+interface UserProps {
+  users: User[]
 }
 
 const MemoFavourite = memo(UserFavourite);
@@ -39,7 +41,7 @@ const UserItem = ({
           type='button'>
             {name}
         </button>
-        <MemoFavourite userName={name} />
+        <MemoFavourite userId={id} />
       </div>
       <div>
         <span className='user-list__email'>{email}</span>
@@ -57,15 +59,16 @@ const UserItem = ({
 // wrapped in memo as the individual cards stay the same
 const MemoUserItem = memo(UserItem);
 
-const UserList = () => {
-  const { data, error, isLoading } = useGetUsers();
+const UserList = ({
+  users
+}: UserProps) => {
   const [ searchTerm, setSearchTerm ] = useState<string>('')
   const [ selectedId, setSelectedId ] = useState<number | undefined>();
   const post = useGetPosts(selectedId);
   
   const filteredData = useMemo(() =>
-    (data ?? []).filter((x: User) => includesString(x.name, searchTerm)),
-  [data, searchTerm])
+    users.filter((x: User) => includesString(x.name, searchTerm)),
+  [users, searchTerm])
 
   const handleSelect = useCallback((id: number) => {
     setSelectedId(id);
@@ -76,13 +79,6 @@ const UserList = () => {
     setSearchTerm(val);
   }, [])
 
-  if (isLoading) {
-    return <UserListSkeleton />
-  }
-
-  if (error || !data) {
-    return <ErrorState />
-  }
   
   return (
     <>

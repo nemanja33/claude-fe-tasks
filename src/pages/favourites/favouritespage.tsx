@@ -1,21 +1,29 @@
+import useGetUsers from "../../hooks/users/useUsers";
+import { selectFavoutires } from "../../redux/features/favourites/favouritesSlice";
 import { useAppSelector } from "../../redux/hooks";
+import { ErrorState } from "../../widgets/errorState/errorState";
+import { UserList } from "../../widgets/users/userList/userList";
+import UserListSkeleton from "../../widgets/users/userList/userListSkeleton";
 import "./favourites.css";
 
 const FavouritesPage = () => {
-  const favouriteUsers = useAppSelector(state => state.favourites.favs);
+  const { data, error, isLoading } = useGetUsers();
+  const favouriteUsers = useAppSelector(state => selectFavoutires(state, data || []));
+
+  if (isLoading) {
+    return <UserListSkeleton />
+  }
+
+  if (error || !data) {
+    return <ErrorState />
+  }
 
   if (!favouriteUsers.length) {
     return <span>No favourite users</span>
   }
 
   return (
-    <ul className="favourites">
-      {
-        favouriteUsers.map((user) => (
-          <li className="favourites__item" key={user}>{user}</li>
-        ))
-      }
-    </ul>
+    <UserList users={favouriteUsers} />
   )
 };
 

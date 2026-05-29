@@ -1,24 +1,25 @@
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { addToFavourites, getSingle, removeFromFavourites } from "../../../redux/features/favourites/favouritesSlice";
+import { addToFavourites, selectSingle, removeFromFavourites } from "../../../redux/features/favourites/favouritesSlice";
 
 interface UserFavouriteProps {
-  userName: string
+  userId: number
 }
 
 const UserFavourite = ({
-  userName
+  userId
 }: UserFavouriteProps) => {
   const dispatch = useAppDispatch()
-  const isFavourite = useAppSelector(state => getSingle(state, userName))
+  const isFavourite = useAppSelector(state => selectSingle(state, userId))
 
-  const btnClass = `user-favourite ${isFavourite ? 'user-favourite--active' : null}`
-  const handleClick = () => isFavourite ? dispatch(removeFromFavourites(userName)) : dispatch(addToFavourites(userName))
+  const btnClass = `user-favourite ${isFavourite ? 'user-favourite--active' : ""}`
+  const buttonLabel = isFavourite ? 'Remove from favourites' : 'Add to favourites'
+  const handleClick = () => isFavourite ? dispatch(removeFromFavourites(userId)) : dispatch(addToFavourites(userId))
 
   return (
     <button
       className={btnClass}
       type="button"
-      aria-label="Add to favourites"
+      aria-label={buttonLabel}
       onClick={handleClick}
     >
       {/* star code just copied for the example */}
