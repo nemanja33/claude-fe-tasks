@@ -1,4 +1,4 @@
-import { Action, combineSlices, configureStore, ThunkAction } from "@reduxjs/toolkit";
+import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import favouritesSlice from "./features/favourites/favouritesSlice";
 
 const reducerSlices = combineSlices(favouritesSlice);
@@ -11,9 +11,3 @@ export { store }
 export type AppStore = typeof store
 export type RootState = ReturnType<AppStore['getState']>
 export type AppDispatch = AppStore['dispatch']
-export type AppThunk<ThunkReturnType = void> = ThunkAction<
-  ThunkReturnType,
-  RootState,
-  unknown,
-  Action
->
