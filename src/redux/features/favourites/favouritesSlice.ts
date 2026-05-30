@@ -1,6 +1,6 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "../../../hooks/users/useUsers";
 import { RootState } from "../../store";
+import { User } from "../../../types/users";
 
 interface state {
   favs: number[]
@@ -26,7 +26,7 @@ const favouritesSlice = createSlice({
 const selectAll = (state: RootState) => state.favourites
 const selectUsers = (state: RootState, users: User[]) => users
 
-export const selectFavoutires = createSelector(
+export const selectFavourites = createSelector(
   [
     selectAll,
     selectUsers

@@ -1,15 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import createQueryFn from '../createQueryFn';
 import { SIXTY_SECONDS } from '../../client/queryClient';
-
-type User = {
-  id: number,
-  name: string,
-  email: string,
-  company: {
-    name: string
-  }
-}
+import { User } from '../../types/users';
 
 const useGetUsers = () => {
   const queryFn = () => fetch(process.env.REACT_APP_USERS_API as string);
