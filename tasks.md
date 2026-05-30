@@ -154,3 +154,27 @@ Add routing and implement route-level code splitting.
 
 **Concepts covered:**
 Static import vs dynamic import, `React.lazy`, `Suspense`, skeleton fallbacks, `react-error-boundary` for failed chunk loads, route-level code splitting, main bundle vs chunks, navigation derived from routes config
+
+---
+
+## Task 8 — Redux Toolkit: Global State Management
+
+Add a user favourites feature using Redux Toolkit.
+
+**Requirements:**
+- Install `@reduxjs/toolkit` and `react-redux`
+- `favouritesSlice` with `addFavourite` and `removeFavourite` actions
+- Store favourite user IDs (`number[]`), not full objects
+- Set up store and wrap app in `Provider`
+- Each user item has a favourite toggle button
+- Nav shows current favourites count
+- `/favourites` route shows favourited users (combine Redux IDs + TanStack Query data)
+
+**TypeScript:**
+- `PayloadAction` for action typing
+- `RootState` and `AppDispatch` exported
+- Typed `useAppSelector` and `useAppDispatch` hooks
+- No `any`
+
+**Concepts covered:**
+RTK slice, `configureStore` + `combineSlices`, `PayloadAction<T>`, typed hooks with `.withTypes<>()`, `RootState`/`AppDispatch`, `createSelector` for memoised derived state, IDs not objects in Redux, server state vs client state separation, dynamic `aria-label` on toggle buttons

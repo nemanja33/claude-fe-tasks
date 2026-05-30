@@ -135,3 +135,37 @@ Correct. Each chunk loads on first navigation to its route. If you never visit /
 - **Route-level code splitting** — the natural split boundary; each route is its own chunk, loaded on demand
 - **Main bundle vs chunks** — shared UI (nav, providers) stays in the main bundle; page-level components go into chunks
 - **Navigation from routes config** — single source of truth; adding a route automatically adds a nav item
+
+---
+
+## Task 8 — Redux Toolkit: Global State Management
+
+### Questions & Answers
+
+**What is a slice in Redux Toolkit and what does it replace from plain Redux?**
+My answer: a slice handles just one state of the store. Haven't worked in plain Redux.
+Correction: Correct on what it is. Plain Redux context: before RTK you'd write separate action type constants, action creator functions, and a reducer with a switch statement — all manually. A slice replaces all three with one createSlice call. RTK also wraps Immer so you can write state.favs.push(x) instead of returning a new array.
+
+**What is the difference between useSelector and useDispatch?**
+My answer: useSelector gives the state we need, useDispatch dispatches actions that change state.
+Correct.
+
+**Why is useAppSelector / useAppDispatch preferred over the plain hooks?**
+My answer: creates a pre-typed version of them.
+Correct. Specifically: plain useSelector gives you unknown state unless you cast it every time. useAppSelector knows the full RootState shape so you get autocomplete and type safety on every selector without manual casting.
+
+**TanStack Query manages the users list, Redux manages favourites — how do you combine both?**
+My answer: saved favourite users as string[]. Should I save IDs and get user data on the favourites page?
+Correction: Yes — store IDs (number[]), not full objects. User data lives in TanStack Query's cache. On the favourites page: get users from TanStack Query, filter by IDs from Redux. Single source of truth for each concern, no duplication.
+
+### Concepts Covered
+
+- **Redux Toolkit slice** — replaces plain Redux's manual action types, action creators, and switch-case reducers with a single createSlice call; Immer is built in so you can mutate state directly
+- **configureStore + combineSlices** — modern RTK store setup
+- **PayloadAction<T>** — correctly types the action payload in reducers
+- **Typed hooks** — useAppSelector/useAppDispatch with .withTypes<>() give full type inference without casting on every use
+- **RootState / AppDispatch** — derived from the store, not manually maintained
+- **createSelector** — memoised derived state; only recomputes when inputs change; the right tool for filtering/transforming Redux state
+- **IDs not objects in Redux** — store minimal identifiers; let TanStack Query own the full data; combine at the component level
+- **Server state vs client state** — TanStack Query owns remote data, Redux owns shared client state; they solve different problems and compose cleanly
+- **Dynamic aria-label on toggle buttons** — label must reflect current state, not just the default action
