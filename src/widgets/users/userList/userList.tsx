@@ -4,16 +4,15 @@ import './userList.css';
 import useGetPosts, { Post } from '../../../hooks/posts/usePosts';
 import { User } from '../../../hooks/users/useUsers';
 import { UserPosts } from '../userPosts/userPosts';
-import { UseQueryResult } from '@tanstack/react-query';
 import { UserFavourite } from './userFavourite';
+import { UseQueryResult } from '@tanstack/react-query';
 
 function includesString(base: string, incl: string) {
   return base.toLowerCase().includes(incl.toLowerCase())
 }
 
 type UserItemProps = User & {
-  post: UseQueryResult<Post[], Error> | undefined,
-  onSelect: (id: number) => void;
+  onSelect?: (id: number) => void;
   selectedId?: number,
 }
 
@@ -28,17 +27,19 @@ const UserItem = ({
   email,
   company,
   id,
-  post,
-  onSelect,
-  selectedId
 }: UserItemProps) => {
+  const [ isOpen, setIsOpen ] = useState<boolean>(false);
+  const post: UseQueryResult<Post[], Error> | undefined = useGetPosts(id);
+
   return (
     <li className='user-list__list-item'>
       <div className='user-list__user'>
         <button
           className='user-list__name'
-          onClick={() => onSelect(id)}
-          type='button'>
+          onClick={() => setIsOpen(!isOpen)}
+          type='button'
+          disabled={!post}
+        >
             {name}
         </button>
         <MemoFavourite userId={id} />
@@ -48,7 +49,7 @@ const UserItem = ({
         <span className='user-list__company'>{company.name}</span>
       </div>
       {
-        selectedId === id && post && (
+        isOpen && (
           <UserPosts post={post} />
         )
       }
@@ -63,16 +64,10 @@ const UserList = ({
   users
 }: UserProps) => {
   const [ searchTerm, setSearchTerm ] = useState<string>('')
-  const [ selectedId, setSelectedId ] = useState<number | undefined>();
-  const post = useGetPosts(selectedId);
-  
+
   const filteredData = useMemo(() =>
     users.filter((x: User) => includesString(x.name, searchTerm)),
   [users, searchTerm])
-
-  const handleSelect = useCallback((id: number) => {
-    setSelectedId(id);
-  }, []);
 
   const filterUsers = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -94,9 +89,6 @@ const UserList = ({
             filteredData.map((data) => (
               <MemoUserItem
                 key={data.id}
-                selectedId={selectedId}
-                onSelect={handleSelect}
-                post={data.id === selectedId ? post : undefined}
                 {...data}
               />
             ))

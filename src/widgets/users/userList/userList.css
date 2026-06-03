@@ -40,7 +40,7 @@
     transition: transform 0.3s ease-in;
     transform-origin: top left;
 
-    &:hover {
+    &:not([disabled]):hover {
         transform: scale(1.05);
     }
 }
