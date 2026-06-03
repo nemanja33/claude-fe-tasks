@@ -1,0 +1,4 @@
+.skip-link:focus-visible {
+    overflow: visible;
+    clip: unset;
+}

@@ -17,7 +17,6 @@ const useGetPosts = (id?: number) => {
     staleTime: SIXTY_SECONDS,
     enabled: !!id
   });
-
   return postsQuery;
 }
 
