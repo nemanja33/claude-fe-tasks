@@ -97,7 +97,7 @@ It's above in the document
 
 
 ### Lighthouse measures Core Web Vitals — LCP, CLS, FID/INP. What does each one measure?
-LCP - Largest Contenful Paint, measures the part of the webiste that needs the most time to load.
+LCP - Largest Contenful Paint, measures the part of the website that needs the most time to load.
 CLS - Cumulative Layout Shift, measures if something on the page moved after the initial load. That's why we need to add dimensions to images.
 FID/INP - I guess you mean Time To First Byte, as first input delay is deprecated. Measures the time needed to interact with the website
 
@@ -105,7 +105,7 @@ The React Profiler shows commit duration — what does that mean?
 /
 
 What is the difference between a paint and a layout?
-Layout should be the HTML placed on the site, and paint the styling. Something like that
+Layout is the process where the initial exact position of element is calculated. Painting is the process of showing the pixels on the screen.
 
 
 
@@ -114,3 +114,29 @@ MY QUESTIONS
 - Sources to learn React DevTools and how to use them.
 - Sources to learn paint, layout, etc.
 
+
+
+
+## Update 1
+Used `knip` to check for unused files/imports
+Removed:
+Unused files (3)
+src/App.test.tsx                            
+src/pages/favourites/favourites.skeleton.tsx
+src/setupTests.ts                           
+Unused dependencies (4)
+@testing-library/dom         package.json:8:6 
+@testing-library/jest-dom    package.json:9:6 
+@testing-library/react       package.json:10:6
+@testing-library/user-event  package.json:11:6
+Unused exports (1)
+UserItem  src/widgets/users/userList/userList.tsx:104:20
+Unused exported types (1)
+AppStore  type  src/redux/store.ts:11:13
+
+
+So ttfb is the time we get anything from the server.
+inp is when somebody does an interaction and the time user wait until something happens?
+
+## Performance
+- Initial Score 99, 100 now after updates with knip 

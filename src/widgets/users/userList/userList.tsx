@@ -101,4 +101,4 @@ const UserList = ({
 };
 
 
-export { UserList, UserItem };
+export { UserList };
