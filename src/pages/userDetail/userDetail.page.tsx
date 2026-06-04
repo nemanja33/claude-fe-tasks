@@ -1,3 +1,4 @@
+import { SanitizeHTML } from "../../components/sanitizeHTML/SanitizeHTML";
 import { selectNotes } from "../../redux/features/user/userSlice";
 import { useAppSelector } from "../../redux/hooks";
 import { Note } from "../../widgets/note/Note";
@@ -15,7 +16,14 @@ const UserDetailPage = () => {
           <div className="user-detail__content">
             <h2>Notes</h2>
             <ol className="user-detail__notes">
-              {notes.map((note, idx) => (<li className="user-detail__note" key={idx}>{note}</li>))}
+              {
+              notes.map((note, idx) => { 
+                return (
+                  <li className="user-detail__note" key={idx}>
+                    <SanitizeHTML node={note} />
+                  </li>
+                )})
+              }
             </ol>
           </div>
         )
