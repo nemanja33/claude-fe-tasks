@@ -1,0 +1,47 @@
+.textarea {
+    position: relative;
+}
+
+.textarea__field {
+  border: 1px solid #333;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  resize: none;
+  width: 50%;
+  height: 10rem;
+}
+
+.textarea__field--error {
+  border: 1px solid red;
+}
+
+.textarea__label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.textarea__error {
+  color: red;
+  display: block;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.textarea__hint {
+  position: absolute;
+  bottom: -2rem;
+  left: 0;
+  background-color: #333;
+  padding: 0.25rem;
+  color: #fff;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.textarea__hint--active {
+  visibility: visible;
+  opacity: 1;
+}

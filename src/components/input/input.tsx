@@ -50,15 +50,13 @@ const Input = forwardRef<HTMLInputElement, IInput>(
                     </span>
                 )
             }
-            {
-                <span
-                    className={`input__hint ${hintVisible ? 'input__hint--active' : ''}`}
-                    aria-hidden={!hintVisible}
-                    id={`${inputId}-hint`}
-                >
-                    {hint}
-                </span>
-            }
+            <span
+                className={`input__hint ${hintVisible ? 'input__hint--active' : ''}`}
+                aria-hidden={!hintVisible}
+                id={`${inputId}-hint`}
+            >
+                {hint}
+            </span>
         </div>
     )
 });

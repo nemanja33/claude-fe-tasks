@@ -1,0 +1,18 @@
+.user-detail__title {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.user-detail__notes {
+  padding-left: 1rem;
+  width: 50%;
+}
+
+.user-detail__note {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+
+.user-detail__content {
+  margin-top: 2rem;
+}
