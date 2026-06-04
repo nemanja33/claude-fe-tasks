@@ -2,6 +2,8 @@ import { RefObject, SyntheticEvent, useId, useReducer, useRef } from 'react';
 import { Button } from '../../components/button/button';
 import { Input } from '../../components/input/input';
 import './form.css'
+import { useAppDispatch } from '../../redux/hooks';
+import { signIn } from '../../redux/features/user/userSlice';
 
 type FormStatus = 'idle' | 'loading' | 'success' ;
 
@@ -86,15 +88,16 @@ function focusElement(ref: RefObject<HTMLInputElement | null>) {
 }
 
 const LoginForm = () => {
-    const [state, dispatch] = useReducer(reducer, initState)
+    const [state, stateDispatch] = useReducer(reducer, initState);
+    const reduxDispatch = useAppDispatch();
     const headingId = useId();
     const emailRef = useRef<HTMLInputElement | null>(null);
     const passwordRef = useRef<HTMLInputElement | null>(null);
 
     function submitMock(e: SyntheticEvent<HTMLFormElement>) {
         e.preventDefault();
-        const emailValid = validateEmail(state.email, dispatch);
-        const passwordValid = validatePassword(state.password, dispatch);
+        const emailValid = validateEmail(state.email, stateDispatch);
+        const passwordValid = validatePassword(state.password, stateDispatch);
         
         if (!emailValid) {
             return focusElement(emailRef)
@@ -103,10 +106,13 @@ const LoginForm = () => {
             return focusElement(passwordRef)
         }
 
-        dispatch({type: "SET_STATUS", payload: 'loading'});
+        stateDispatch({type: "SET_STATUS", payload: 'loading'});
         
         setTimeout(() => {
-            dispatch({type: "SET_STATUS", payload: 'success'});
+            stateDispatch({type: "SET_STATUS", payload: 'success'});
+            // I don't have a login config set up. For now you log in as a fixed user with the username `Cyber Dragon`.
+            // In a real scenario BE would check if a user with the typed email exists and look up in the DB what the username is to print.
+            reduxDispatch(signIn("Cyber Dragon"))
         }, 1500);
     }
 
@@ -119,8 +125,8 @@ const LoginForm = () => {
                     type='email'
                     error={state.emailError}
                     hint='Please use a valid email.'
-                    onChange={(e) => dispatch({type: "SET_EMAIL", payload: e.target.value})}
-                    onBlur={(e) => validateEmail(e.target.value, dispatch)}
+                    onChange={(e) => stateDispatch({type: "SET_EMAIL", payload: e.target.value})}
+                    onBlur={(e) => validateEmail(e.target.value, stateDispatch)}
                     ref={emailRef}
                 />
                 <Input
@@ -128,8 +134,8 @@ const LoginForm = () => {
                     type='password'
                     error={state.passwordError}
                     hint='Password must be at least 8 characters long.' 
-                    onChange={(e) => dispatch({type: "SET_PASSWORD", payload: e.target.value})}
-                    onBlur={(e) => validatePassword(e.target.value, dispatch)}
+                    onChange={(e) => stateDispatch({type: "SET_PASSWORD", payload: e.target.value})}
+                    onBlur={(e) => validatePassword(e.target.value, stateDispatch)}
                     ref={passwordRef}
                 />
                 <Button
