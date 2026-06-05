@@ -110,7 +110,7 @@ const LoginForm = () => {
         
         setTimeout(() => {
             stateDispatch({type: "SET_STATUS", payload: 'success'});
-            // I don't have a login config set up. For now you log in as a fixed user with the username `Cyber Dragon`.
+            // I don't have login logic set up. For now you log in as a fixed user with the username `Cyber Dragon`.
             // In a real scenario BE would check if a user with the typed email exists and look up in the DB what the username is to print.
             reduxDispatch(signIn("Cyber Dragon"))
         }, 1500);

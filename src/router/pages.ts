@@ -5,4 +5,5 @@ const PAGES = {
   USER_DETAIL: "User Detail"
 };
 
+
 export { PAGES }

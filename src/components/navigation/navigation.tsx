@@ -2,8 +2,11 @@ import { Link } from "react-router";
 import './navigation.css';
 import { ROUTES } from "../../router/routes";
 import { useAppSelector } from "../../redux/hooks";
+import { selectUser } from "../../redux/features/user/userSlice";
+import { PAGES } from "../../router/pages";
 
 const Navigation = () => {
+  const user = useAppSelector(selectUser);
   const favouritesCount = useAppSelector(state => state.favourites.favs);
 
   return (
@@ -11,9 +14,11 @@ const Navigation = () => {
       <div className="wrap">
         <ul className="navigation__items">
           {
-            Object.entries(ROUTES).map((data) => {
+            Object.entries(ROUTES)
+              .filter(r => !r[1].protected || user)
+              .map((data) => {
               const route = data[0];
-              const path = data[1].path;
+              const path = route === PAGES.USER_DETAIL ? `/${user.toLowerCase().replaceAll(' ', '-')}` : data[1].path;
               const count = data[1].count;
 
               return (

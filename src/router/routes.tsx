@@ -9,7 +9,8 @@ type RouteType = {
   [key: string]: {
     path: string;
     element: ReactNode,
-    count?: boolean
+    count?: boolean,
+    protected?: boolean
   }
 }
 
@@ -73,8 +74,9 @@ const ROUTES: RouteType = {
     count: true
   },
   [PAGES.USER_DETAIL]: {
-    path: "/[id]",
+    path: "/:id",
     element: <UserDetailPage />,
+    protected: true
   }
 }
 

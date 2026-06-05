@@ -1,15 +1,16 @@
 import { SanitizeHTML } from "../../components/sanitizeHTML/SanitizeHTML";
-import { selectNotes } from "../../redux/features/user/userSlice";
+import { selectNotes, selectUser } from "../../redux/features/user/userSlice";
 import { useAppSelector } from "../../redux/hooks";
 import { Note } from "../../widgets/note/Note";
 import './userDetail.css'
 
 const UserDetailPage = () => {
-  const notes = useAppSelector(selectNotes)
+  const notes = useAppSelector(selectNotes);
+  const user = useAppSelector(selectUser);
 
   return (
     <div className="user-detail">
-      <h1 className="user-detail__title">user</h1>
+      <h1 className="user-detail__title">{user}</h1>
       <Note />
       {
         notes.length > 0 && (
