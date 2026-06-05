@@ -10,7 +10,7 @@ type Post = {
 }
 
 const useGetPosts = (id?: number) => {
-  const queryFn = () => fetch(`${process.env.REACT_APP_POSTS_API}?userId=${id}`)
+  const queryFn = () => fetch(`${process.env.REACT_APP_REACT_APP_POSTS_API}?userId=${id}`)
   const postsQuery = useQuery({
     queryKey: ['post', id] as const,
     queryFn: createQueryFn<Post[]>({ queryFn }),
