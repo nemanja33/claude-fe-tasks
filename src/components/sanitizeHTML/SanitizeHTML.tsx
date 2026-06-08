@@ -26,9 +26,8 @@ const SanitizeHTML = ({
   node,
   options
 }: SanitizeHTMLProps) => {
-  const customOptions = {...options}
   return (
-    <span dangerouslySetInnerHTML={sanitize(node, customOptions)} />
+    <div dangerouslySetInnerHTML={sanitize(node, options || {})} />
   )
 };
 

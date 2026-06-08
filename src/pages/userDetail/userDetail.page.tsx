@@ -18,10 +18,10 @@ const UserDetailPage = () => {
             <h2>Notes</h2>
             <ol className="user-detail__notes">
               {
-              notes.map((note, idx) => { 
+              notes.map((note) => { 
                 return (
-                  <li className="user-detail__note" key={idx}>
-                    <SanitizeHTML node={note} />
+                  <li className="user-detail__note" key={note.id}>
+                    <SanitizeHTML node={note.content} />
                   </li>
                 )})
               }

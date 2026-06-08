@@ -178,3 +178,39 @@ Add a user favourites feature using Redux Toolkit.
 
 **Concepts covered:**
 RTK slice, `configureStore` + `combineSlices`, `PayloadAction<T>`, typed hooks with `.withTypes<>()`, `RootState`/`AppDispatch`, `createSelector` for memoised derived state, IDs not objects in Redux, server state vs client state separation, dynamic `aria-label` on toggle buttons
+
+---
+
+## Task 9 — Web Vitals & Performance Profiling
+
+Profile and improve the `fe-component` app. No new features.
+
+**Part 1 — Measure:**
+- Lighthouse audit on `/users` — record Performance, Accessibility, Best Practices scores
+- Performance tab — record a filter interaction, identify re-rendering components
+- React DevTools Profiler — find the slowest render
+
+**Part 2 — Improve:**
+- Make at least two measurable improvements
+- Run Lighthouse before and after
+
+**Part 3 — Report:**
+- Document scores before/after, profiler findings, changes made and why
+
+**Concepts covered:**
+Core Web Vitals (LCP, CLS, INP), TTFB, commit duration, paint vs layout, tree shaking, CDN and caching for TTFB, `knip` for unused code detection, production build vs development build differences
+
+---
+
+## Task 10 — Frontend Security
+
+Add a notes feature to the user detail page and audit it for XSS, then document security findings. No backend available — focus on client-side mitigations and reasoning about what a backend would need to do.
+
+**Requirements:**
+- A `Note` form (textarea + submit) that dispatches to a `userSlice` storing `notes: { id: string, content: string }[]`
+- Render notes on the user detail page
+- Demonstrate an XSS injection (e.g. `<img src=x onerror="alert('XSS')">`) before sanitisation, then add a `SanitizeHTML` wrapper around `DOMPurify.sanitize()` with a configurable allow-list and show the same payload neutralised
+- Investigate and document: where auth tokens should be stored (localStorage vs httpOnly cookies) and why, and what `REACT_APP_` env var prefixing means for bundle exposure
+
+**Concepts covered:**
+XSS and `dangerouslySetInnerHTML`, DOMPurify allow-list sanitisation (parse → walk → strip → serialise, not string conversion), `localStorage` vs `httpOnly` cookies for token storage, `REACT_APP_` env var exposure in CRA bundles, RTK `prepare` callbacks for generating IDs (`nanoid()`) at dispatch time, stable keys for list items holding mutable/removable data

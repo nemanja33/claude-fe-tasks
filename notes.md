@@ -169,3 +169,84 @@ Correction: Yes — store IDs (number[]), not full objects. User data lives in T
 - **IDs not objects in Redux** — store minimal identifiers; let TanStack Query own the full data; combine at the component level
 - **Server state vs client state** — TanStack Query owns remote data, Redux owns shared client state; they solve different problems and compose cleanly
 - **Dynamic aria-label on toggle buttons** — label must reflect current state, not just the default action
+
+---
+
+## Task 9 — Web Vitals & Performance Profiling
+
+### Findings
+
+- Lighthouse performance: 99 (dev) → 100 (prod after cleanup)
+- Accessibility: 98 → 100 (added `<main>` landmark and skip link)
+- Slowest render in Profiler: UserItem (Memo) key="7" at 0.7ms
+- Filter input rerenders are necessary — all items must update on search
+- Accordion expansion caused the whole list to rerender — fixed by moving `useGetPosts` inside `UserItem` with local boolean state
+
+### Improvements Made
+
+- Moved `useGetPosts` inside `UserItem` — eliminates whole-list rerender when one accordion opens; users don't wait for post data to load
+- Ran `knip` — removed 3 unused files, 4 unused testing dependencies, 1 unused export, 1 unused type
+
+### Core Web Vitals
+
+- **LCP (Largest Contentful Paint)** — time until the largest visible element finishes loading
+- **CLS (Cumulative Layout Shift)** — measures unexpected layout movement after initial load; reason to always set dimensions on images
+- **INP (Interaction to Next Paint)** — time from user interaction to the next visual response; replaced FID which only measured the first interaction; INP measures all interactions and takes the worst-case percentile
+- **TTFB (Time to First Byte)** — time until the first byte arrives from the server; separate from Core Web Vitals but affects all of them
+
+### Profiler Concepts
+
+- **Commit duration** — time for React to write the reconciled changes to the real DOM, including running effects and updating refs; long commit = janky interactions
+- **Paint vs Layout** — Layout calculates exact element positions; Paint converts that to pixels on screen; layout changes are more expensive because they invalidate downstream paint and composite steps
+
+### Tree Shaking
+
+- Process of removing unused exports from the final bundle at build time
+- Only works with ES modules (`import`/`export`) — statically analysable at build time
+- CommonJS (`require()`) cannot be tree-shaken — runtime call, bundler can't trace it
+- `"sideEffects": false` in `package.json` signals the bundler the package is safe to tree-shake aggressively
+- Import specific functions, not whole libraries: `import debounce from 'lodash/debounce'` not `import _ from 'lodash'`
+
+### TTFB Improvements
+
+- Mostly server-side but frontend/infrastructure decisions matter
+- **CDN** — serve static assets from a node geographically close to the user; biggest win for static sites
+- **HTTP caching headers** — `Cache-Control` tells browser/CDN how long to cache; browser cache hit = TTFB of zero
+- **Next.js static generation (SSG)** — pre-built HTML served from CDN instantly, no server computation per request
+- **HTTP/2 and HTTP/3** — multiplexing reduces connection overhead; handled automatically by modern CDNs
+- React SPA: put it on Vercel/Netlify/Cloudflare Pages for near-zero TTFB on static assets
+- Next.js: use static rendering by default, SSR only where per-request fresh data is needed
+
+---
+
+## Task 10 — Frontend Security
+
+### Findings
+
+- Unsanitised `<img src=x onerror="alert('XSS')">` submitted through a form executes immediately via `dangerouslySetInnerHTML` — proves any unsanitised user input rendered as HTML is an XSS vector
+- After wrapping output in `SanitizeHTML` (a `DOMPurify.sanitize()` component with a configurable `ALLOWED_TAGS`/`ALLOWED_ATTR` allow-list), the same payload renders as inert text — no execution, no meaning
+- `REACT_APP_PUBLIC_KEY` is visible in the production bundle — by design, since `REACT_APP_` prefixed vars are meant to be exposed to the client; anything secret must never use that prefix
+
+### Improvements Made
+
+- Built `SanitizeHTML` — a reusable wrapper that merges per-instance `Config` options over a sensible default allow-list (`span`, `p`, `strong`, `a` / `href`)
+- `userSlice.addNote` uses an RTK `prepare` callback to generate a stable `nanoid()` id at dispatch time, so the reducer always receives a fully-formed `{ id, content }` — fixed an initial `key={idx}` regression by storing real ids instead of deriving keys from array position
+- Switched `SanitizeHTML`'s wrapper element from `<span>` to `<div>` so block-level allowed tags (e.g. `<p>`) don't produce invalid nested-block-in-inline markup
+
+### XSS & Sanitisation
+
+- **XSS (cross-site scripting)** — injecting malicious script into a site so it executes in another user's browser with that user's privileges (cookies, session, DOM access)
+- **`dangerouslySetInnerHTML`** — bypasses React's automatic escaping and injects raw HTML; safe only when the HTML is fully trusted or sanitised first
+- **What `DOMPurify.sanitize()` actually does** — not a string conversion. It parses the input into a DOM tree, walks every node, strips any tag/attribute/protocol not on the allow-list (including `javascript:` URIs and event handlers like `onerror`), then serialises the cleaned tree back to a safe HTML string
+- **Allow-list vs deny-list** — specify what's permitted (`ALLOWED_TAGS`/`ALLOWED_ATTR`) rather than trying to enumerate everything dangerous; far harder to bypass with obfuscation
+
+### Auth Token Storage
+
+- **`localStorage`** — readable by any JS running on the page; a single missed XSS vector anywhere in the app exposes the token. Sanitisation reduces XSS surface but does not eliminate it, so it's not a substitute for safe storage
+- **`httpOnly` cookies** — inaccessible to JS entirely (`document.cookie` can't read them); the browser attaches them to requests automatically. This is the correct place for auth tokens regardless of how well the rest of the app sanitises input
+- General storage tradeoffs: `localStorage` for low-stakes UI state (themes, open/closed panels), `sessionStorage` for transient per-tab state, `httpOnly` cookies for anything identity- or auth-related
+
+### Environment Variables
+
+- `REACT_APP_` prefix in Create React App is a deliberate, verbose marker — anything with that prefix gets inlined into the client bundle at build time and is publicly visible
+- Anything that must stay secret (API secrets, private keys) must never use the prefix and must live server-side only
