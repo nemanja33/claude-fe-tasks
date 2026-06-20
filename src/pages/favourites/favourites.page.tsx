@@ -3,15 +3,15 @@ import { selectFavourites } from "../../redux/features/favourites/favouritesSlic
 import { useAppSelector } from "../../redux/hooks";
 import { ErrorState } from "../../widgets/errorState/errorState";
 import { UserList } from "../../widgets/users/userList/userList";
-import UserListSkeleton from "../../widgets/users/userList/userListSkeleton";
 import "./favourites.css";
+import FavouritesSkeleton from "./favourites.skeleton";
 
 const FavouritesPage = () => {
   const { data, error, isLoading } = useGetUsers();
   const favouriteUsers = useAppSelector(state => selectFavourites(state, data || []));
 
   if (isLoading) {
-    return <UserListSkeleton />
+    return <FavouritesSkeleton />
   }
 
   if (error || !data) {

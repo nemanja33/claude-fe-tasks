@@ -2,7 +2,7 @@ const items = 3;
 
 const HomeSkeleton = () => {
   return (
-    <div className='wrap'>
+    <div className='wrap' aria-busy="true" role="status">
       <div aria-label="Loading skeleton">
         <div className="skeleton__flex">
           <div>

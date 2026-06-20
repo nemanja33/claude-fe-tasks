@@ -250,3 +250,23 @@ Correction: Yes — store IDs (number[]), not full objects. User data lives in T
 
 - `REACT_APP_` prefix in Create React App is a deliberate, verbose marker — anything with that prefix gets inlined into the client bundle at build time and is publicly visible
 - Anything that must stay secret (API secrets, private keys) must never use the prefix and must live server-side only
+
+---
+
+## Task 11 — Code Splitting & Lazy Loading
+
+### Findings
+
+- All 4 route-level pages lazy-loaded: Home, Login, Favourites, UserDetail — each splits into its own JS chunk
+- Home page chunk reduced from 3.1kB to 0.3kB after splitting
+- Navigating to a route for the first time triggers a network request for that route's chunk; subsequent visits use the cached chunk
+- Each route wrapped as `ErrorBoundary` > `Suspense` > `lazy component` — boundary outside Suspense is the correct order
+
+### Code Splitting Concepts
+
+- **`React.lazy()`** — takes a function returning a dynamic `import()` and produces a component React can suspend on while the chunk loads
+- **Dynamic `import()`** — ES module syntax that returns a Promise; the bundler sees it and splits the import target into a separate chunk at build time
+- **What triggers a chunk request** — the first render of a `lazy()` component; React evaluates the `import()` Promise, suspends, and the Suspense boundary shows the fallback until the chunk resolves
+- **`Suspense` vs `isLoading`** — `isLoading` is explicit state you manage in the component; `Suspense` is a rendering contract where the component (or lazy loader) throws a Promise, React catches it, and renders the fallback automatically — no manual state needed
+- **Error boundary placement** — must wrap `Suspense`, not sit inside it; a failed chunk load throws an error, which only an error boundary above the Suspense can catch
+- **Skeleton fallbacks** — purpose-built placeholder UIs that match the rough shape of the real content; reduce perceived load time and avoid CLS compared to generic spinners or text

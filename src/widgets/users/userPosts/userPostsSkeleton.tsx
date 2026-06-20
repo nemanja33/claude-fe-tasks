@@ -2,7 +2,7 @@ const items = 3;
 
 const UserPostsSkeleton = () => {
   return (
-    <div aria-label="Loading skeleton">
+    <div aria-label="Loading skeleton" aria-busy="true" role="status">
       {
         [...(Array(items).keys())].map((_, i) => (
           <div className="skeleton__flex" key={i}>

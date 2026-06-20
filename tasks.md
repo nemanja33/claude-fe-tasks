@@ -214,3 +214,20 @@ Add a notes feature to the user detail page and audit it for XSS, then document 
 
 **Concepts covered:**
 XSS and `dangerouslySetInnerHTML`, DOMPurify allow-list sanitisation (parse → walk → strip → serialise, not string conversion), `localStorage` vs `httpOnly` cookies for token storage, `REACT_APP_` env var exposure in CRA bundles, RTK `prepare` callbacks for generating IDs (`nanoid()`) at dispatch time, stable keys for list items holding mutable/removable data
+
+---
+
+## Task 11 — Code Splitting & Lazy Loading
+
+Split route-level pages into separate JS chunks so users only download code for routes they visit.
+
+**Requirements:**
+- Convert at least 2-3 route-level pages to `React.lazy()` imports
+- Wrap each in `Suspense` with a meaningful skeleton fallback (not text or a spinner)
+- Add an `ErrorBoundary` around each lazy route to handle chunk load failures
+- Verify in DevTools Network tab that separate chunks load on first navigation to each route
+- Compare build output (chunk count and sizes) before and after
+- Document findings: what triggers a chunk request, what happens on failure, how `Suspense` differs from `isLoading`
+
+**Concepts covered:**
+`React.lazy()`, dynamic `import()`, Suspense-as-rendering-contract vs isLoading state, error boundary placement (must wrap Suspense, not sit inside it), skeleton fallbacks for perceived performance and CLS prevention, route-level chunk splitting, chunk caching on subsequent navigations

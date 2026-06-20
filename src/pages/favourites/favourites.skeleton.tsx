@@ -1,6 +1,6 @@
 const items = 3;
 
-const UserListSkeleton = () => {
+const FavouritesSkeleton = () => {
   return (
     <div aria-label="Loading skeleton" aria-busy="true" role="status">
       <span className="skeleton skeleton--w10 skeleton--h10"></span>
@@ -24,4 +24,4 @@ const UserListSkeleton = () => {
   )
 };
 
-export default UserListSkeleton;
+export default FavouritesSkeleton;

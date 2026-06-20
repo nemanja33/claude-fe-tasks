@@ -4,6 +4,7 @@ import LoginSkeleton from "../pages/login/login.skeleton";
 import ErrorComponent from "../components/errorComponent/errorComponent";
 import { PAGES } from "./pages";
 import UserDetailSkeleton from "../pages/userDetail/userDetail.skeleton";
+import FavouritesSkeleton from "../pages/favourites/favourites.skeleton";
 
 type RouteType = {
   [key: string]: {
@@ -42,7 +43,7 @@ const LoginPage = () => {
 const FavouritesPage = () => {
   return (
     <ErrorComponent>
-      <Suspense fallback={<LoginSkeleton />}>
+      <Suspense fallback={<FavouritesSkeleton />}>
         <Favourites />
       </Suspense>
     </ErrorComponent>
